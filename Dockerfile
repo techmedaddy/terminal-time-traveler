@@ -1,5 +1,4 @@
-
-FROM gcc:12-slim
+FROM gcc:12
 
 WORKDIR /app
 

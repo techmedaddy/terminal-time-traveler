@@ -1,10 +1,11 @@
-
+version: "3.9"
 
 services:
   time-traveler:
     build: .
     container_name: time_traveler_cli
-    stdin_open: true     # Keeps STDIN open (for interactive CLI)
-    tty: true            # Allocates a pseudo-TTY (important for terminal input/output)
+    stdin_open: true       # Keeps STDIN open (interactive mode)
+    tty: true              # Enables terminal input/output
+    command: ./bin/time_traveler
     volumes:
-      - .:/app           # Optional: Mount local project to container for live changes
+      - .:/app             # Mount current directory into container (optional for live changes)

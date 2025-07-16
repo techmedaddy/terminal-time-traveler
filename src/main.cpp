@@ -1,18 +1,18 @@
 #include "../include/timeline.hpp"
 #include <iostream>
-#include <filesystem>
-
-namespace fs = std::filesystem;
+#include <vector>
 
 int main() {
     Timeline timeline;
+    std::vector<std::string> jsonFiles = {
+        "data/timeline.json",
+        "data/events_science.json",
+        "data/events_inventions.json"
+    };
 
-    // Load all JSON files from the 'data' folder
-    for (const auto& entry : fs::directory_iterator("data")) {
-        if (entry.path().extension() == ".json") {
-            if (!timeline.loadData(entry.path().string())) {
-                std::cerr << "Failed to load file: " << entry.path() << "\n";
-            }
+    for (const auto& file : jsonFiles) {
+        if (!timeline.loadData(file)) {
+            std::cerr << "Failed to load: " << file << "\n";
         }
     }
 

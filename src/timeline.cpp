@@ -1,4 +1,3 @@
-
 #include "../include/timeline.hpp"
 #include <fstream>
 #include <nlohmann/json.hpp>
@@ -11,11 +10,26 @@ bool Timeline::loadData(const std::string& filePath) {
     if (!file.is_open()) return false;
 
     json j;
-    file >> j;
-
-    for (auto& [year, event] : j.items()) {
-        timelineData[year] = event;
+    try {
+        file >> j;
+    } catch (const json::parse_error& e) {
+        std::cerr << "JSON parse error in " << filePath << ": " << e.what() << "\n";
+        return false;
     }
+
+    // Support both flat and list-style JSON structures
+    if (j.is_object()) {
+        for (auto& [year, event] : j.items()) {
+            timelineData[year] = event;
+        }
+    } else if (j.is_array()) {
+        for (const auto& item : j) {
+            if (item.contains("year") && item.contains("event")) {
+                timelineData[std::to_string(item["year"].get<int>())] = item["event"];
+            }
+        }
+    }
+
     return true;
 }
 
